@@ -5,75 +5,66 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+import org.springframework.core.io.*;
 
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
-class Fruit {
-    private String name;
-
-    public Fruit(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return this.name;
-    }
-}
-
-class Apple extends Fruit {
-
-    private final String arbre = "Pommier";
-
-    public Apple() {
-        super("pomme");
-    }
-
-    public Apple(String name) {
-        super(name);
-    }
-
-    public void presse() {
-        System.out.println("Jus de pomme!! (" + arbre + "s de france)");
-    }
-}
+import java.util.stream.Stream;
 
 @Slf4j
 public class CheckJava {
     @Test
-    public void dateTests() {
-        System.out.println("Hello World!!");
+    public void simpleTests() {
+        File inputFile = new File("F:/Code/Items/Rooster/unitFile.csv");
 
-        Fruit fruit = new Fruit("fruit");
-
-        Apple apple = new Apple();
-
-        List<Fruit> fruitBasket = new ArrayList<>();
-        fruitBasket.add(apple);
-        fruitBasket.add(fruit);
-
-        System.out.println("Pannier de fruits:");
-        System.out.println(fruitBasket);
-
-        List<? super Apple> appleBasket = new ArrayList<>();
-        appleBasket.add(apple);
-//        appleBasket.add(fruit);
-
-        for (Object f :
-                appleBasket) {
-            System.out.println(f.toString());
+        if(inputFile.isFile()) {
+            System.out.println("it's a file!");
         }
 
-        System.out.println("Pannier de pomme:");
-        System.out.println(appleBasket);
+        try {
+            FileUrlResource inputResource = new FileUrlResource("file:F:/Code/Items/Rooster/unitFile.csv");
+
+            System.out.println("resource : " + inputResource.getFilename());
+
+            if (inputResource.isFile()) {
+                System.out.println("it's a file too!");
+            }
+
+            UrlResource outputResource = new UrlResource("file:F:/Code/Items/testOutput.txt");
+
+            Files.writeString(outputResource.getFile().toPath(), "test");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void readFile() throws MalformedURLException {
+        UrlResource inputFile = new UrlResource("file:F:/Code/Items/Rooster/unitFile.csv");
+
+        try (Stream<String> lines = Files.lines(inputFile.getFile().toPath(), Charset.defaultCharset())) {
+            lines.forEachOrdered(System.out::println);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void writeFile() throws MalformedURLException {
+        UrlResource outputFile = new UrlResource("file:F:/Code/Items/testOutput.txt");
+
+        try {
+            Files.writeString(outputFile.getFile().toPath(), "test");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
