@@ -43,7 +43,7 @@ public class ConfigStepGetUnitTranscode {
                             "from bank_data.unit_transco transco\n" +
                             "order by transco.field_name;",
 
-                    (ResultSetExtractor<UnitTransco>) (resultSet) -> {
+                    (resultSet) -> {
                         UnitTransco unitTransco = new UnitTransco();
 
                         while (resultSet.next()) {
@@ -54,7 +54,7 @@ public class ConfigStepGetUnitTranscode {
                         return unitTransco;
                     });
 
-            log.info("transco to save: " + unit);
+            log.debug("transco to save: " + unit);
 
             ExecutionContext context = chunkContext.getStepContext().getStepExecution().getExecutionContext();
             context.put("transco", unit);

@@ -13,7 +13,7 @@ public class UnitTransco {
 
     public void append(String field, Integer pos) {
         fields.put(field, pos);
-        log.info("Ajout de " + field + " en position " + pos);
+        log.debug("Ajout de " + field + " en position " + pos);
     }
 
     public Integer getPos(String fieldName) {
