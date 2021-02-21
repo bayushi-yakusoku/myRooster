@@ -1,6 +1,7 @@
 package alo.spring.batch.rooster;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.UrlResource;
@@ -75,6 +76,8 @@ public class CheckJava {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         UrlResource inputFile = new UrlResource("file:F:/Code/Items/Rooster/NATION_roosterFile.csv");
 
+        byte[] digest;
+
         // file hashing with DigestInputStream
         try (DigestInputStream dis = new DigestInputStream(
                 new BufferedInputStream(
@@ -82,16 +85,11 @@ public class CheckJava {
                 md))
         {
             while (dis.read() != -1) ; //empty loop to clear the data
-            md = dis.getMessageDigest();
+
+            digest = md.digest();
         }
 
-        // bytes to hex
-        StringBuilder result = new StringBuilder();
-        for (byte b : md.digest()) {
-            result.append(String.format("%02x", b));
-        }
-
-        System.out.println("Checksum : " + result.toString());
+        System.out.println("Checksum : " + Hex.encodeHexString(digest, false));
     }
 
     @Test
