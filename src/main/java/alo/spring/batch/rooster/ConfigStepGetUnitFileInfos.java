@@ -2,6 +2,7 @@ package alo.spring.batch.rooster;
 
 import alo.spring.batch.rooster.database.RoosterFile;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Hex;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.DigestInputStream;
@@ -56,18 +58,19 @@ public class ConfigStepGetUnitFileInfos {
     private String checksum(String filepath) throws IOException, NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
 
+        byte[] digest;
+
         // file hashing with DigestInputStream
-        try (DigestInputStream dis = new DigestInputStream(new FileInputStream(filepath), md)) {
-            while (dis.read() != -1) ; //empty loop to clear the data
-            md = dis.getMessageDigest();
+        try (DigestInputStream dis = new DigestInputStream(
+                new BufferedInputStream(new FileInputStream(filepath)),
+                md)
+        ) {
+            //noinspection StatementWithEmptyBody
+            while (dis.read() != -1) ; // Empty loop to process the data
+
+            digest = md.digest();
         }
 
-        // bytes to hex
-        StringBuilder result = new StringBuilder();
-        for (byte b : md.digest()) {
-            result.append(String.format("%02x", b));
-        }
-
-        return result.toString();
+        return Hex.encodeHexString(digest, false);
     }
 }
