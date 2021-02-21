@@ -2,10 +2,12 @@ package alo.spring.batch.rooster;
 
 import alo.spring.batch.rooster.database.UnitTransco;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.*;
+import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileItemWriter;
@@ -17,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.data.repository.query.Param;
 import org.springframework.util.Assert;
 
 @Slf4j
@@ -26,6 +27,7 @@ public class ConfigStepTreatUnitFile {
     @Autowired
     StepBuilderFactory stepBuilderFactory;
 
+    @Autowired
     private UnitTransco unitTransco;
 
     @Bean
@@ -56,11 +58,11 @@ public class ConfigStepTreatUnitFile {
         return new StepExecutionListener() {
             @Override
             public void beforeStep(StepExecution stepExecution) {
-                log.info("######################### Before Step!!!");
+                log.debug("unitTransco used : " + unitTransco.getFields());
 
-                JobExecution jobExecution = stepExecution.getJobExecution();
-                ExecutionContext jobContext = jobExecution.getExecutionContext();
-                unitTransco = (UnitTransco) jobContext.get("transco");
+//                JobExecution jobExecution = stepExecution.getJobExecution();
+//                ExecutionContext jobContext = jobExecution.getExecutionContext();
+//                unitTransco = (UnitTransco) jobContext.get("transco");
             }
 
             @Override
@@ -72,8 +74,6 @@ public class ConfigStepTreatUnitFile {
 
     private ItemProcessor<UnitItem, UnitItem> processor() {
         return (item) -> {
-            log.info("########################## processing item!!");
-            log.info("########################## Et pouf: " +  unitTransco);
             return item;
         };
     }

@@ -7,14 +7,11 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.listener.ExecutionContextPromotionListener;
 import org.springframework.batch.core.step.tasklet.Tasklet;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import javax.sql.DataSource;
 
 @Slf4j
@@ -26,33 +23,16 @@ public class ConfigStepGetUnitTranscode {
     @Autowired
     RoosterFile roosterFile;
 
+    @Autowired
+    UnitTransco unitTransco;
+
     @Bean
-    public Tasklet taskletGetUnitTranscode(@Qualifier("bankDataSource") DataSource dataSource) {
+    public Tasklet taskletGetUnitTransco(@Qualifier("bankDataSource") DataSource dataSource) {
         return (contribution, chunkContext) -> {
+            unitTransco.setUnit(roosterFile.getUnit());
 
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-
-            UnitTransco unit = jdbcTemplate.query("select transco.field_name, transco.field_position \n" +
-                            "from bank_data.unit_transco transco\n" +
-                            "order by transco.field_name;",
-
-                    (resultSet) -> {
-                        UnitTransco unitTransco = new UnitTransco();
-
-                        while (resultSet.next()) {
-                            unitTransco.append(resultSet.getString("field_name"),
-                                    resultSet.getInt("field_position"));
-                        }
-
-                        return unitTransco;
-                    });
-
-            log.debug("roosterFile is now : " + roosterFile.getFileName());
-            log.debug("transco to save: " + unit);
-            log.debug("Job instance : " + chunkContext.getStepContext().getJobInstanceId());
-
-            ExecutionContext context = chunkContext.getStepContext().getStepExecution().getExecutionContext();
-            context.put("transco", unit);
+//            ExecutionContext context = chunkContext.getStepContext().getStepExecution().getExecutionContext();
+//            context.put("transco", unitTransco);
 
             return RepeatStatus.FINISHED;
         };
@@ -70,10 +50,10 @@ public class ConfigStepGetUnitTranscode {
     }
 
     @Bean
-    public Step stepGetUnitTranscode() {
+    public Step stepGetUnitTransco() {
         return stepBuilderFactory
-                .get("Step Get Unit Transcode")
-                .tasklet(taskletGetUnitTranscode(null))
+                .get("Step Get Unit Transco")
+                .tasklet(taskletGetUnitTransco(null))
                 .listener(promotionListener())
                 .build();
     }

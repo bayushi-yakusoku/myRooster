@@ -19,8 +19,8 @@ public class MapperUnitItem implements FieldSetMapper<UnitItem> {
     public UnitItem mapFieldSet(FieldSet fieldSet) throws BindException {
         UnitItem item = new UnitItem();
 
-        log.info("Mapping to UnitItem");
-        log.info("Transco : " + unitTransco);
+//        log.info("Mapping to UnitItem");
+//        log.info("Transco : " + unitTransco.getFields());
 
         item.setId(fieldSet.readInt(unitTransco.getPos("ID") - 1));
 

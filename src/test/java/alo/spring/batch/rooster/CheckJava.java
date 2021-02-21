@@ -1,20 +1,16 @@
 package alo.spring.batch.rooster;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import org.springframework.core.io.*;
-
-import java.io.*;
+import org.springframework.core.io.FileUrlResource;
+import org.springframework.core.io.UrlResource;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -65,6 +61,20 @@ public class CheckJava {
             Files.writeString(outputFile.getFile().toPath(), "test");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testRegex() {
+        String data = "NATION_file_name.csv";
+        Pattern pattern = Pattern.compile("^(\\p{Alpha}*)_");
+        Matcher matcher = pattern.matcher(data);
+
+        if (matcher.find()) {
+            System.out.println("extract : " + matcher.group(1));
+        }
+        else {
+            System.out.println("Nothing found!!");
         }
     }
 }
