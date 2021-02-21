@@ -1,10 +1,9 @@
 package alo.spring.batch.rooster;
 
+import alo.spring.batch.rooster.database.RoosterFile;
 import alo.spring.batch.rooster.database.UnitTransco;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.listener.ExecutionContextPromotionListener;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -14,24 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 
-import javax.batch.runtime.context.StepContext;
 import javax.sql.DataSource;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.util.logging.Logger;
 
 @Slf4j
 @Configuration
 public class ConfigStepGetUnitTranscode {
     @Autowired
     StepBuilderFactory stepBuilderFactory;
+
+    @Autowired
+    RoosterFile roosterFile;
 
     @Bean
     public Tasklet taskletGetUnitTranscode(@Qualifier("bankDataSource") DataSource dataSource) {
@@ -54,7 +47,9 @@ public class ConfigStepGetUnitTranscode {
                         return unitTransco;
                     });
 
+            log.debug("roosterFile is now : " + roosterFile.getFileName());
             log.debug("transco to save: " + unit);
+            log.debug("Job instance : " + chunkContext.getStepContext().getJobInstanceId());
 
             ExecutionContext context = chunkContext.getStepContext().getStepExecution().getExecutionContext();
             context.put("transco", unit);

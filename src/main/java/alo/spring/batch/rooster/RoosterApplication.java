@@ -20,12 +20,14 @@ public class RoosterApplication {
 	JobBuilderFactory jobBuilderFactory;
 
 	@Bean
-	public Job jobGetUnitTransco(@Qualifier("stepGetUnitTranscode") Step stepGetUnitTransco,
-								 @Qualifier("stepTreatUnitFile") Step stepTreatUnitFile) {
+	public Job jobGetUnitTransco(@Qualifier("stepGetUnitFileInfo") 	Step stepGetUnitFileInfo,
+								 @Qualifier("stepGetUnitTranscode") Step stepGetUnitTransco,
+								 @Qualifier("stepTreatUnitFile") 	Step stepTreatUnitFile) {
 		return jobBuilderFactory
 				.get("jobGetUnitTransco")
 				.incrementer(new ParameterAddRunTime())
-				.start(stepGetUnitTransco)
+				.start(stepGetUnitFileInfo)
+				.next(stepGetUnitTransco)
 				.next(stepTreatUnitFile)
 				.build();
 	}
