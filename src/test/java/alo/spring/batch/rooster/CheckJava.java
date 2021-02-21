@@ -4,11 +4,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.UrlResource;
+
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -43,7 +49,7 @@ public class CheckJava {
 
     @Test
     public void readFile() throws MalformedURLException {
-        UrlResource inputFile = new UrlResource("file:F:/Code/Items/Rooster/unitFile.csv");
+        UrlResource inputFile = new UrlResource("file:F:/Code/Items/Rooster/NATION_roosterFile.csv");
 
         try (Stream<String> lines = Files.lines(inputFile.getFile().toPath(), Charset.defaultCharset())) {
             lines.forEachOrdered(System.out::println);
@@ -62,6 +68,30 @@ public class CheckJava {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void chekSumFile() throws NoSuchAlgorithmException, IOException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        UrlResource inputFile = new UrlResource("file:F:/Code/Items/Rooster/NATION_roosterFile.csv");
+
+        // file hashing with DigestInputStream
+        try (DigestInputStream dis = new DigestInputStream(
+                new BufferedInputStream(
+                        new FileInputStream(inputFile.getFile())),
+                md))
+        {
+            while (dis.read() != -1) ; //empty loop to clear the data
+            md = dis.getMessageDigest();
+        }
+
+        // bytes to hex
+        StringBuilder result = new StringBuilder();
+        for (byte b : md.digest()) {
+            result.append(String.format("%02x", b));
+        }
+
+        System.out.println("Checksum : " + result.toString());
     }
 
     @Test
