@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.DataAccessException;
+
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,7 +43,18 @@ public class ConfigStepGetUnitFileInfos {
 
             roosterFile.setFileName(fileName);
             roosterFile.setSignature(signature);
-            roosterFile.updateDb();
+
+            try {
+                roosterFile.updateDb();
+            } catch (DataAccessException e) {
+                log.error("Error during db update for file/signature : " + fileName + "/" + signature);
+                log.error(e.getMessage());
+                if (log.isDebugEnabled()) {
+                    e.printStackTrace();
+                }
+
+                throw e;
+            }
 
             return RepeatStatus.FINISHED;
         };

@@ -22,17 +22,21 @@ public class UnitTransco {
     private DataSource dataSource;
 
     @Setter(AccessLevel.NONE)
-    private Map<String, Integer> fields = new HashMap<>();
+    private Map<String, FieldInfo> fields = new HashMap<>();
 
     private String unit = "null";
 
-    public void append(String field, Integer pos) {
-        fields.put(field, pos);
+    private void append(String field, FieldInfo fieldInfo) {
+        fields.put(field, fieldInfo);
     }
 
     public Integer getPos(String fieldName) {
-        return (Integer) fields.get(fieldName);
+        return fields.get(fieldName).getPosition();
     }
+
+    public Boolean isMandatory(String fieldName) {
+        return fields.get(fieldName).getIsMandatory();
+    };
 
     public void setUnit(String unit) {
         this.unit = unit;
@@ -42,15 +46,19 @@ public class UnitTransco {
     private void getTransco() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-        UnitTransco unit = jdbcTemplate.query("select transco.field_name, transco.field_position " +
+        UnitTransco unit = jdbcTemplate.query(
+                "select transco.field_name, transco.field_position, transco.field_is_mandatory " +
                         "from bank_data.unit_transco transco " +
                         "where transco.unit_name = ? " +
                         "order by transco.field_name;",
 
                 (resultSet) -> {
                     while (resultSet.next()) {
-                        this.append(resultSet.getString("field_name"),
-                                resultSet.getInt("field_position"));
+                        FieldInfo fieldInfo = new FieldInfo();
+                        fieldInfo.setPosition(resultSet.getInt("field_position"));
+                        fieldInfo.setIsMandatory(resultSet.getBoolean("field_is_mandatory"));
+
+                        this.append(resultSet.getString("field_name"), fieldInfo);
                     }
 
                     return null;
@@ -59,4 +67,10 @@ public class UnitTransco {
 
         log.debug("transco found : " + fields);
     }
+}
+
+@Data
+class FieldInfo {
+    private Integer position;
+    private Boolean isMandatory;
 }
