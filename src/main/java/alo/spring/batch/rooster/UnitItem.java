@@ -55,4 +55,26 @@ public class UnitItem {
 
         return value;
     }
+
+    @Override
+    public String toString() {
+
+        StringBuilder output = new StringBuilder();
+
+        output.append("UnitItem{" +
+                "address='" + address + '\'' +
+                ", age='" + age + '\'' +
+                ", country='" + country + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", id='" + id + '\'' +
+                ", lastname='" + lastname + '\'' +
+                "}\n");
+
+        for (ControlStatus control:
+             controls) {
+            output.append(" - " + control + "\n");
+        }
+
+        return output.toString();
+    }
 }
