@@ -1,4 +1,4 @@
-package alo.spring.batch.rooster;
+package alo.spring.batch.rooster.model.unit;
 
 import alo.spring.batch.rooster.database.UnitTransco;
 import lombok.AccessLevel;

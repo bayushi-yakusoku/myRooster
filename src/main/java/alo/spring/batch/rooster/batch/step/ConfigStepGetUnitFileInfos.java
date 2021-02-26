@@ -1,4 +1,4 @@
-package alo.spring.batch.rooster;
+package alo.spring.batch.rooster.batch.step;
 
 import alo.spring.batch.rooster.database.RoosterFile;
 import lombok.extern.slf4j.Slf4j;

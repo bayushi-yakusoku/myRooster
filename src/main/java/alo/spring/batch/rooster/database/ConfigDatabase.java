@@ -37,8 +37,8 @@ public class ConfigDatabase {
 
 //        resourceDatabasePopulator.addScript(new ClassPathResource("schema_bank_data.sql"));
 //        resourceDatabasePopulator.addScript(new ClassPathResource("insert_into_rooster_tables.sql"));
-        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/schema_bank_data.sql"));
-        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/insert_into_rooster_tables.sql"));
+        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/sql/schema_bank_data.sql"));
+        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/sql/insert_into_rooster_tables.sql"));
 
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
         dataSourceInitializer.setDataSource(datasource);
