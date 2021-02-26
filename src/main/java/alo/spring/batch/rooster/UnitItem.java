@@ -14,6 +14,8 @@ import java.util.List;
 @Slf4j
 @Data
 public class UnitItem {
+    private String line = null;
+
     private String address;
     private String age;
     private String country;
@@ -37,6 +39,34 @@ public class UnitItem {
         firstname = getValue("FIRSTNAME", fieldSet, transco);
         id = getValue("ID", fieldSet, transco);
         lastname = getValue("LASTNAME", fieldSet, transco);
+    }
+
+    public UnitItem(String line, UnitTransco transco) {
+        this.line = line;
+
+        String[] fields = line.split(";");
+
+        address = getValue("ADDRESS", fields, transco);
+        age = getValue("AGE", fields, transco);
+        country = getValue("COUNTRY", fields, transco);
+        firstname = getValue("FIRSTNAME", fields, transco);
+        id = getValue("ID", fields, transco);
+        lastname = getValue("LASTNAME", fields, transco);
+    }
+
+    @Nullable
+    private String getValue(String fieldName, String[] fields, UnitTransco transco) {
+        String value = null;
+
+        try {
+            value = fields[transco.getPos(fieldName) - 1];
+        }
+        catch (IndexOutOfBoundsException e) {
+            addControlResult(new ControlStatus("Field " + fieldName + " does not exist", ControlStatus.Status.FAILED));
+            return null;
+        }
+
+        return value;
     }
 
     @Nullable
@@ -73,6 +103,10 @@ public class UnitItem {
         for (ControlStatus control:
              controls) {
             output.append(" - " + control + "\n");
+        }
+
+        if ( line != null) {
+            output.append("from line: " + line + "\n" );
         }
 
         return output.toString();

@@ -105,4 +105,16 @@ public class CheckJava {
             System.out.println("Nothing found!!");
         }
     }
+
+    @Test
+    public void testSplitLine() {
+
+        String line = "1;Halestorm;Lzzy;30;Los Angeles;USA";
+
+        String[] fields = line.split(";");
+
+        for (String field : fields) {
+            System.out.println(field);
+        }
+    }
 }

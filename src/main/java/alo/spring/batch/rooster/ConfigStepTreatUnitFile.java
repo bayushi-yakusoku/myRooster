@@ -39,7 +39,8 @@ public class ConfigStepTreatUnitFile {
                 .name("ReaderUnitItem")
                 .resource(unitFile)
                 .lineTokenizer(new DelimitedLineTokenizer(";"))
-                .fieldSetMapper(new MapperUnitItem(unitTransco))
+//                .fieldSetMapper(new MapperUnitItem(unitTransco))
+                .lineMapper(new LineMapperUnit(unitTransco))
                 .build();
 
     }
