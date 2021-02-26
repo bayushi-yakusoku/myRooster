@@ -47,10 +47,10 @@ public class UnitTransco {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
         UnitTransco unit = jdbcTemplate.query(
-                "select transco.field_name, transco.field_position, transco.field_is_mandatory " +
-                        "from bank_data.unit_transco transco " +
-                        "where transco.unit_name = ? " +
-                        "order by transco.field_name;",
+                "SELECT TRANSCO.FIELD_NAME, TRANSCO.FIELD_POSITION, TRANSCO.FIELD_IS_MANDATORY " +
+                        "FROM BANK_DATA.UNIT_TRANSCO TRANSCO " +
+                        "WHERE TRANSCO.UNIT_NAME = ? " +
+                        "ORDER BY TRANSCO.FIELD_NAME;",
 
                 (resultSet) -> {
                     while (resultSet.next()) {

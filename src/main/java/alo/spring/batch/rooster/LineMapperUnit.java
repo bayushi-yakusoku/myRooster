@@ -14,7 +14,7 @@ public class LineMapperUnit implements LineMapper<UnitItem> {
     }
 
     @Override
-    public UnitItem mapLine(String line, int lineNumber) throws Exception {
+    public UnitItem mapLine(String line, int lineNumber) {
         return new UnitItem(line, unitTransco);
     }
 }

@@ -49,8 +49,8 @@ public class RoosterFile {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
         jdbcTemplate.update(
-                    "insert into bank_data.rooster_file (file_name, signature) " +
-                            "values (?, ?);",
+                    "INSERT INTO BANK_DATA.ROOSTER_FILE (FILE_NAME, SIGNATURE) " +
+                            "VALUES (?, ?);",
                     fileName,
                     signature
             );
