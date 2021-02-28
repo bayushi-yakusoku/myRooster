@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 
 @Slf4j
 @Configuration
-public class ConfigStepGetUnitTranscode {
+public class ConfigStepGetUnitTransco {
     @Autowired
     StepBuilderFactory stepBuilderFactory;
 

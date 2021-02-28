@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 
 @EnableBatchProcessing
 @SpringBootApplication
-//@Import(ConfigStepGetUnitTranscode.class)
+//@Import(ConfigStepGetUnitTransco.class)
 public class RoosterApplication {
 
 	@Autowired
@@ -21,7 +21,7 @@ public class RoosterApplication {
 
 	@Bean
 	public Job jobGetUnitTransco(@Qualifier("stepGetUnitFileInfo") 	Step stepGetUnitFileInfo,
-								 @Qualifier("stepGetUnitTransco") Step stepGetUnitTransco,
+								 @Qualifier("stepGetUnitTransco") 	Step stepGetUnitTransco,
 								 @Qualifier("stepTreatUnitFile") 	Step stepTreatUnitFile) {
 		return jobBuilderFactory
 				.get("Rooster")

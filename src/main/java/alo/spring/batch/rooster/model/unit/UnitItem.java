@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 public class UnitItem {
     private String line = null;
+    private Boolean isGood = true;
 
     private String address;
     private String age;
@@ -27,6 +28,12 @@ public class UnitItem {
     List<ControlStatus> controls = new ArrayList<>();
 
     public void addControlResult(ControlStatus controlStatus) {
+
+        if(controlStatus.getSeverity() == ControlStatus.Severity.ERROR &&
+                controlStatus.getStatus() == ControlStatus.Status.FAILED) {
+            isGood = false;
+        }
+
         this.controls.add(controlStatus);
     }
 
@@ -84,6 +91,10 @@ public class UnitItem {
         }
 
         return value;
+    }
+
+    public Boolean isGood() {
+        return true;
     }
 
     @Override
