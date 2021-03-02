@@ -4,26 +4,18 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+
 import javax.sql.DataSource;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
 @Data
-@Component
 public class RoosterFile {
-
-    @Autowired
-    @Qualifier("bankDataSource")
-    @Setter(AccessLevel.NONE)
-    private DataSource dataSource;
 
     private String fileName;
     private String signature;
@@ -31,10 +23,11 @@ public class RoosterFile {
     @Setter(AccessLevel.NONE)
     private String unit;
 
-    public RoosterFile() {
-        this.fileName = "n/a";
-        this.signature = "n/a";
-        this.unit = "n/a";
+    public RoosterFile(String fileName, String signature) {
+        this.fileName = fileName;
+        this.signature = signature;
+
+        getUnitFromFileName();
     }
 
     public void setFileName(String fileName) {
@@ -42,7 +35,7 @@ public class RoosterFile {
         this.unit = getUnitFromFileName();
     }
 
-    public void updateDb() throws DataAccessException {
+    public void updateDb(DataSource dataSource) throws DataAccessException {
         Assert.notNull(fileName, "filename cannot be null pomalo!");
         Assert.notNull(signature, "signature cannot be null pomalo!");
 
@@ -61,8 +54,10 @@ public class RoosterFile {
         Pattern pattern = Pattern.compile("^(\\p{Alpha}*)_");
         Matcher matcher = pattern.matcher(fileName);
 
-        matcher.find();
-
-        return matcher.group(1);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        else
+            return "n/a";
     }
 }

@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public class ControlStatus {
-    enum Status {PASSED, SKIPPED, FAILED};
-    enum Severity {ERROR, WARNING};
+    enum Status {FAILED, PASSED, SKIPPED}
+    enum Severity {ERROR, WARNING}
 
     private Severity severity;
     private String controlName;

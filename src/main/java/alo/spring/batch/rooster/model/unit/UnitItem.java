@@ -37,8 +37,6 @@ public class UnitItem {
         this.controls.add(controlStatus);
     }
 
-    public UnitItem() {};
-
     public UnitItem(FieldSet fieldSet, UnitTransco transco) {
         address = getValue("ADDRESS", fieldSet, transco);
         age = getValue("AGE", fieldSet, transco);
@@ -63,7 +61,7 @@ public class UnitItem {
 
     @Nullable
     private String getValue(String fieldName, String[] fields, UnitTransco transco) {
-        String value = null;
+        String value;
 
         try {
             value = fields[transco.getPos(fieldName) - 1];
@@ -78,7 +76,8 @@ public class UnitItem {
 
     @Nullable
     private String getValue(String fieldName, FieldSet fieldSet, UnitTransco transco) {
-        String value = null;
+        String value;
+
         try {
             value = fieldSet.readString(transco.getPos(fieldName) - 1);
         } catch (IndexOutOfBoundsException e) {

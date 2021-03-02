@@ -1,15 +1,14 @@
 package alo.spring.batch.rooster.batch.step;
 
 import alo.spring.batch.rooster.control.ClassifierUnitItem;
+import alo.spring.batch.rooster.database.RoosterFile;
 import alo.spring.batch.rooster.database.UnitTransco;
 import alo.spring.batch.rooster.model.unit.UnitItem;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.Step;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -33,7 +32,8 @@ public class ConfigStepTreatUnitFile {
     @Autowired
     StepBuilderFactory stepBuilderFactory;
 
-    @Autowired
+    private RoosterFile roosterFile;
+
     private UnitTransco unitTransco;
 
     @Bean
@@ -97,11 +97,14 @@ public class ConfigStepTreatUnitFile {
         return new StepExecutionListener() {
             @Override
             public void beforeStep(StepExecution stepExecution) {
-                log.debug("unitTransco used : " + unitTransco.getFields());
+                JobExecution jobExecution = stepExecution.getJobExecution();
+                ExecutionContext jobContext = jobExecution.getExecutionContext();
+                roosterFile = (RoosterFile) jobContext.get(ConfigStepGetUnitFileInfo.UNIT_FILE_KEY);
+                unitTransco = (UnitTransco) jobContext.get(ConfigStepGetUnitTransco.UNIT_TRANSCO_KEY);
 
-//                JobExecution jobExecution = stepExecution.getJobExecution();
-//                ExecutionContext jobContext = jobExecution.getExecutionContext();
-//                unitTransco = (UnitTransco) jobContext.get("transco");
+                if (unitTransco != null) {
+                    log.debug("unitTransco used : " + unitTransco.getFields());
+                }
             }
 
             @Override
@@ -129,6 +132,7 @@ public class ConfigStepTreatUnitFile {
                 .writer(classifierItemWriter(null, null))
                 .stream(goodWriterUnitItems(null))
                 .stream(badWriterUnitItems(null))
+                .listener(listenerStep())
                 .build();
     }
 }

@@ -4,27 +4,24 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @Data
-@Component
 public class UnitTransco {
-    @Autowired
-    @Qualifier("bankDataSource")
-    @Setter(AccessLevel.NONE)
-    private DataSource dataSource;
 
     @Setter(AccessLevel.NONE)
     private Map<String, FieldInfo> fields = new HashMap<>();
 
-    private String unit = "null";
+    private String unit;
+
+    public UnitTransco(String unit, DataSource dataSource) {
+        this.unit = unit;
+        getTransco(dataSource);
+    }
 
     private void append(String field, FieldInfo fieldInfo) {
         fields.put(field, fieldInfo);
@@ -36,17 +33,12 @@ public class UnitTransco {
 
     public Boolean isMandatory(String fieldName) {
         return fields.get(fieldName).getIsMandatory();
-    };
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-        getTransco();
     }
 
-    private void getTransco() {
+    private void getTransco(DataSource dataSource) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-        UnitTransco unit = jdbcTemplate.query(
+        jdbcTemplate.query(
                 "SELECT TRANSCO.FIELD_NAME, TRANSCO.FIELD_POSITION, TRANSCO.FIELD_IS_MANDATORY " +
                         "FROM BANK_DATA.UNIT_TRANSCO TRANSCO " +
                         "WHERE TRANSCO.UNIT_NAME = ? " +
