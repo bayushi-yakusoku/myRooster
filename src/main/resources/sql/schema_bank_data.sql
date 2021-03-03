@@ -28,15 +28,36 @@ CREATE TABLE IF NOT EXISTS unit_transco (
   field_name 			VARCHAR(40) NOT NULL,
   field_position 		INT NOT NULL,
   field_is_mandatory 	BOOLEAN DEFAULT TRUE,
-  
+
   PRIMARY KEY (unit_name, field_name)
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS ref_check (
+  check_name 			VARCHAR(40) NOT NULL,
+  check_label			VARCHAR(128) NOT NULL,
+
+  PRIMARY KEY (check_name)
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS unit_check (
+  unit_name 			VARCHAR(20) NOT NULL,
+  check_name 			VARCHAR(40) NOT NULL,
+  severity				VARCHAR(1) NOT NULL DEFAULT 'E',
+
+  PRIMARY KEY (unit_name, check_name),
+
+  CONSTRAINT fk_ref_check
+	FOREIGN KEY (check_name)
+	REFERENCES ref_check (check_name)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS rooster_file (
   rooster_file_id		INT NOT NULL AUTO_INCREMENT,
   file_name				VARCHAR(256) NOT NULL,
   signature 			VARCHAR(256) NOT NULL,
-  
+
   PRIMARY KEY (rooster_file_id),
   UNIQUE (file_name, signature)
 ) ENGINE = InnoDB;
@@ -45,9 +66,9 @@ CREATE TABLE IF NOT EXISTS rooster_file_info (
   rooster_file_id		INT NOT NULL AUTO_INCREMENT,
   info_name				VARCHAR(256) NOT NULL,
   info_value			VARCHAR(256) NOT NULL,
-  
+
   PRIMARY KEY (rooster_file_id, info_name),
-  
+
   CONSTRAINT fk_file_info_rooster_file
 	FOREIGN KEY (rooster_file_id)
     REFERENCES rooster_file (rooster_file_id)
@@ -59,15 +80,15 @@ CREATE TABLE IF NOT EXISTS rooster_file_job (
   rooster_file_id		INT NOT NULL AUTO_INCREMENT,
   job_instance_id		BIGINT  NOT NULL,
   creation_date			DATETIME NOT NULL DEFAULT now(),
-  
+
   PRIMARY KEY (rooster_file_id, job_instance_id),
-  
+
   CONSTRAINT fk_file_job_rooster_file
 	FOREIGN KEY (rooster_file_id)
     REFERENCES rooster_file (rooster_file_id)
     ON DELETE no action
     ON UPDATE no action,
-  
+
   CONSTRAINT fk_file_job_batch_job_instance
 	FOREIGN KEY (job_instance_id)
     REFERENCES spring_batch.batch_job_instance (job_instance_id)
