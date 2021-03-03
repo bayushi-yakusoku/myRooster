@@ -21,6 +21,10 @@ public class ControlStatus {
         this.status = status;
     }
 
+    public ControlStatus(Severity severity, String controlName, Status status) {
+        this(severity, controlName, null, status);
+    }
+
     public ControlStatus(String controlName, Status status) {
         this(Severity.WARNING, controlName, null, status);
     }
