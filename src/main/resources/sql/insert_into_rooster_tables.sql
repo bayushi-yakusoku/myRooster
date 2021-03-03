@@ -12,3 +12,13 @@ commit;
 insert into bank_data.rooster_file (file_name, signature) values ('test', 'pouf');
 
 commit;
+
+insert into bank_data.ref_check (check_name, check_label) values ('CHECK_001', 'Check on LASTNAME');
+insert into bank_data.ref_check (check_name, check_label) values ('CHECK_002', 'Check on COUNTRY');
+insert into bank_data.ref_check (check_name, check_label) values ('CHECK_UTF8', 'Check whole line for Utf-8');
+
+insert into bank_data.unit_check (unit_name, check_name) values ('NATION', 'CHECK_001');
+insert into bank_data.unit_check (unit_name, check_name) values ('NATION', 'CHECK_002');
+insert into bank_data.unit_check (unit_name, check_name, severity) values ('NATION', 'CHECK_UTF8', 'W');
+
+commit;
