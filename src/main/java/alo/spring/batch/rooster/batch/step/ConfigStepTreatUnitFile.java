@@ -1,5 +1,6 @@
 package alo.spring.batch.rooster.batch.step;
 
+import alo.spring.batch.rooster.control.Checker;
 import alo.spring.batch.rooster.control.ClassifierUnitItem;
 import alo.spring.batch.rooster.database.RoosterFile;
 import alo.spring.batch.rooster.database.UnitCheck;
@@ -38,6 +39,10 @@ public class ConfigStepTreatUnitFile {
     private UnitTransco unitTransco;
 
     private UnitCheck unitCheck;
+
+    private Checker checker;
+
+    private Boolean initialized = false;
 
     @Bean
     @StepScope
@@ -100,11 +105,19 @@ public class ConfigStepTreatUnitFile {
         return new StepExecutionListener() {
             @Override
             public void beforeStep(StepExecution stepExecution) {
+
+                if (initialized) {
+                    log.warn("Initialization already done, skip ...");
+                    return;
+                }
+
                 JobExecution jobExecution = stepExecution.getJobExecution();
                 ExecutionContext jobContext = jobExecution.getExecutionContext();
                 roosterFile = (RoosterFile) jobContext.get(ConfigStepGetUnitFileInfo.UNIT_FILE_KEY);
                 unitTransco = (UnitTransco) jobContext.get(ConfigStepGetUnitTransco.UNIT_TRANSCO_KEY);
                 unitCheck   = (UnitCheck)   jobContext.get(ConfigStepGetUnitCheck.UNIT_CHECK_KEY);
+
+                checker = new Checker(unitCheck);
 
                 if (unitTransco != null) {
                     log.debug("unitTransco used : " + unitTransco.getFields());
@@ -113,6 +126,8 @@ public class ConfigStepTreatUnitFile {
                 if (unitCheck != null) {
                     log.debug("unitCheck used : " + unitCheck.getChecks());
                 }
+
+                initialized = true;
             }
 
             @Override
@@ -123,9 +138,7 @@ public class ConfigStepTreatUnitFile {
     }
 
     private ItemProcessor<UnitItem, UnitItem> processor() {
-        return (item) -> {
-            return item;
-        };
+        return (item) -> checker.performChecks(item);
     }
 
     @Bean
