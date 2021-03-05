@@ -16,6 +16,7 @@ public class UnitTransco {
     @Setter(AccessLevel.NONE)
     private Map<String, FieldInfo> fields = new HashMap<>();
 
+    @Setter(AccessLevel.NONE)
     private String unit;
 
     public UnitTransco(String unit, DataSource dataSource) {

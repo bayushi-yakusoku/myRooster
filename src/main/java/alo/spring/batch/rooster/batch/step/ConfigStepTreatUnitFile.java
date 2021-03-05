@@ -2,6 +2,7 @@ package alo.spring.batch.rooster.batch.step;
 
 import alo.spring.batch.rooster.control.ClassifierUnitItem;
 import alo.spring.batch.rooster.database.RoosterFile;
+import alo.spring.batch.rooster.database.UnitCheck;
 import alo.spring.batch.rooster.database.UnitTransco;
 import alo.spring.batch.rooster.model.unit.UnitItem;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,8 @@ public class ConfigStepTreatUnitFile {
     private RoosterFile roosterFile;
 
     private UnitTransco unitTransco;
+
+    private UnitCheck unitCheck;
 
     @Bean
     @StepScope
@@ -101,9 +104,14 @@ public class ConfigStepTreatUnitFile {
                 ExecutionContext jobContext = jobExecution.getExecutionContext();
                 roosterFile = (RoosterFile) jobContext.get(ConfigStepGetUnitFileInfo.UNIT_FILE_KEY);
                 unitTransco = (UnitTransco) jobContext.get(ConfigStepGetUnitTransco.UNIT_TRANSCO_KEY);
+                unitCheck   = (UnitCheck)   jobContext.get(ConfigStepGetUnitCheck.UNIT_CHECK_KEY);
 
                 if (unitTransco != null) {
                     log.debug("unitTransco used : " + unitTransco.getFields());
+                }
+
+                if (unitCheck != null) {
+                    log.debug("unitCheck used : " + unitCheck.getChecks());
                 }
             }
 
