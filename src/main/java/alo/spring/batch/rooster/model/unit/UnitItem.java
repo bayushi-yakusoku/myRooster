@@ -37,8 +37,6 @@ public class UnitItem {
         this.controls.add(controlStatus);
     }
 
-    public UnitItem() {};
-
     public UnitItem(FieldSet fieldSet, UnitTransco transco) {
         address = getValue("ADDRESS", fieldSet, transco);
         age = getValue("AGE", fieldSet, transco);
@@ -51,7 +49,7 @@ public class UnitItem {
     public UnitItem(String line, UnitTransco transco) {
         this.line = line;
 
-        String[] fields = line.split(";");
+        String[] fields = line.split(";", -1);
 
         address = getValue("ADDRESS", fields, transco);
         age = getValue("AGE", fields, transco);
@@ -63,14 +61,20 @@ public class UnitItem {
 
     @Nullable
     private String getValue(String fieldName, String[] fields, UnitTransco transco) {
-        String value = null;
+        String value;
 
         try {
             value = fields[transco.getPos(fieldName) - 1];
         }
         catch (IndexOutOfBoundsException e) {
-            addControlResult(new ControlStatus("Field " + fieldName + " does not exist", ControlStatus.Status.FAILED));
+            addControlResult(new ControlStatus(ControlStatus.Severity.ERROR,
+                    "Field " + fieldName + " Index (" + transco.getPos(fieldName) + ") Out Of Bounds",
+                    ControlStatus.Status.FAILED));
             return null;
+        }
+
+        if (value.isEmpty() && transco.isMandatory(fieldName) ) {
+            addControlResult(new ControlStatus("Field " + fieldName + " is mandatory", ControlStatus.Status.FAILED));
         }
 
         return value;
@@ -78,11 +82,14 @@ public class UnitItem {
 
     @Nullable
     private String getValue(String fieldName, FieldSet fieldSet, UnitTransco transco) {
-        String value = null;
+        String value;
+
         try {
             value = fieldSet.readString(transco.getPos(fieldName) - 1);
         } catch (IndexOutOfBoundsException e) {
-            addControlResult(new ControlStatus("Field " + fieldName + " does not exist", ControlStatus.Status.FAILED));
+            addControlResult(new ControlStatus(ControlStatus.Severity.ERROR,
+                    "Field " + fieldName + " Index (" + transco.getPos(fieldName) + ") Out Of Bounds",
+                    ControlStatus.Status.FAILED));
             return null;
         }
 
@@ -94,7 +101,7 @@ public class UnitItem {
     }
 
     public Boolean isGood() {
-        return true;
+        return isGood;
     }
 
     @Override
@@ -111,13 +118,13 @@ public class UnitItem {
                 ", lastname='" + lastname + '\'' +
                 "}\n");
 
-        for (ControlStatus control:
-             controls) {
-            output.append(" - " + control + "\n");
+        if ( line != null) {
+            output.append("From line: " + line + "\n" );
         }
 
-        if ( line != null) {
-            output.append("from line: " + line + "\n" );
+        for (ControlStatus control:
+                controls) {
+            output.append(" - " + control + "\n");
         }
 
         return output.toString();

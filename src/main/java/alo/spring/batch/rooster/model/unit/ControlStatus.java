@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public class ControlStatus {
-    enum Status {PASSED, SKIPPED, FAILED};
-    enum Severity {ERROR, WARNING};
+    enum Status {FAILED, PASSED, SKIPPED}
+    enum Severity {ERROR, WARNING}
 
     private Severity severity;
     private String controlName;
@@ -21,11 +21,29 @@ public class ControlStatus {
         this.status = status;
     }
 
+    public ControlStatus(Severity severity, String controlName, Status status) {
+        this(severity, controlName, null, status);
+    }
+
     public ControlStatus(String controlName, Status status) {
         this(Severity.WARNING, controlName, null, status);
     }
 
     public ControlStatus(String controlName) {
         this(Severity.WARNING, controlName, null, Status.PASSED);
+    }
+
+    @Override
+    public String toString() {
+
+        StringBuilder output = new StringBuilder();
+
+        output.append("[" + severity + "/" + status + "] " + controlName);
+
+        if (message != null)
+            output.append(", " + message);
+
+        return output.toString();
+
     }
 }

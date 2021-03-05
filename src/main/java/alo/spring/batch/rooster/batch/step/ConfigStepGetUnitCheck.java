@@ -1,9 +1,12 @@
 package alo.spring.batch.rooster.batch.step;
 
 import alo.spring.batch.rooster.database.RoosterFile;
-import alo.spring.batch.rooster.database.UnitTransco;
+import alo.spring.batch.rooster.database.UnitCheck;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.*;
+import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.listener.CompositeStepExecutionListener;
 import org.springframework.batch.core.listener.ExecutionContextPromotionListener;
@@ -19,39 +22,31 @@ import javax.sql.DataSource;
 
 @Slf4j
 @Configuration
-public class ConfigStepGetUnitTransco {
-    public static final String UNIT_TRANSCO_KEY = "transco";
+public class ConfigStepGetUnitCheck {
+    public static final String UNIT_CHECK_KEY = "unitCheck";
 
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
-    private RoosterFile roosterFile;
-
-    private UnitTransco unitTransco;
+    RoosterFile roosterFile;
 
     @Bean
-    public Tasklet taskletGetUnitTransco(@Qualifier("bankDataSource") DataSource dataSource) {
+    public Tasklet taskletGetUnitCheck(@Qualifier("bankDataSource") DataSource dataSource) {
         return (contribution, chunkContext) -> {
-            unitTransco = new UnitTransco(roosterFile.getUnit(), dataSource);
+            UnitCheck unitCheck = new UnitCheck(roosterFile.getUnit(), dataSource);
 
-            ExecutionContext context = chunkContext.getStepContext().getStepExecution().getExecutionContext();
-            context.put(ConfigStepGetUnitFileInfo.UNIT_FILE_KEY, roosterFile);
-            context.put(UNIT_TRANSCO_KEY, unitTransco);
+            chunkContext.getStepContext().getStepExecution().getExecutionContext().put(UNIT_CHECK_KEY, unitCheck);
 
             return RepeatStatus.FINISHED;
         };
     }
 
-    private StepExecutionListener listenerStep() {
+    private StepExecutionListener stepExecutionListener() {
         return new StepExecutionListener() {
             @Override
             public void beforeStep(StepExecution stepExecution) {
-                log.debug("");
-
-                JobExecution jobExecution = stepExecution.getJobExecution();
-                ExecutionContext jobContext = jobExecution.getExecutionContext();
-
-                roosterFile = (RoosterFile) jobContext.get(ConfigStepGetUnitFileInfo.UNIT_FILE_KEY);
+                ExecutionContext executionContext = stepExecution.getJobExecution().getExecutionContext();
+                roosterFile = (RoosterFile) executionContext.get(ConfigStepGetUnitFileInfo.UNIT_FILE_KEY);
             }
 
             @Override
@@ -61,30 +56,26 @@ public class ConfigStepGetUnitTransco {
         };
     }
 
-    public ExecutionContextPromotionListener promotionListener() {
-        log.info("Creating the Promoting things...");
-
+    private ExecutionContextPromotionListener promotionListener() {
         ExecutionContextPromotionListener listener = new ExecutionContextPromotionListener();
-
-        listener.setKeys(new String[] {ConfigStepGetUnitFileInfo.UNIT_FILE_KEY, UNIT_TRANSCO_KEY});
+        listener.setKeys(new String[]{ UNIT_CHECK_KEY });
 
         return listener;
     }
 
-    public CompositeStepExecutionListener compositeStepExecutionListener() {
+    private CompositeStepExecutionListener compositeStepExecutionListener() {
         CompositeStepExecutionListener listener = new CompositeStepExecutionListener();
-
-        listener.register(listenerStep());
+        listener.register(stepExecutionListener());
         listener.register(promotionListener());
 
         return listener;
     }
 
     @Bean
-    public Step stepGetUnitTransco() {
+    public Step stepGetUnitCheck() {
         return stepBuilderFactory
-                .get("Step Get Unit Transco")
-                .tasklet(taskletGetUnitTransco(null))
+                .get("Step Get Unit Check")
+                .tasklet(taskletGetUnitCheck(null))
                 .listener(compositeStepExecutionListener())
                 .build();
     }
