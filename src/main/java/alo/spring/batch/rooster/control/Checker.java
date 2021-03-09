@@ -2,7 +2,6 @@ package alo.spring.batch.rooster.control;
 
 import alo.spring.batch.rooster.database.Check;
 import alo.spring.batch.rooster.database.UnitCheck;
-import alo.spring.batch.rooster.model.unit.ControlStatus;
 import alo.spring.batch.rooster.model.unit.UnitItem;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,7 +48,6 @@ public class Checker {
 
     private void check001(UnitItem item) {
         log.debug("Start Check001 on " + item.getLine());
-        item.addControlResult(new ControlStatus(ControlStatus.Severity.ERROR, "Pouf", ControlStatus.Status.FAILED));
     }
 
     private void check002(UnitItem item) {
