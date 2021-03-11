@@ -2,7 +2,7 @@ package alo.spring.batch.rooster.batch.step;
 
 import alo.spring.batch.rooster.control.Checker;
 import alo.spring.batch.rooster.control.ClassifierUnitItem;
-import alo.spring.batch.rooster.database.RoosterFile;
+import alo.spring.batch.rooster.database.entity.RoosterFile;
 import alo.spring.batch.rooster.database.UnitCheck;
 import alo.spring.batch.rooster.database.UnitTransco;
 import alo.spring.batch.rooster.model.unit.UnitItem;

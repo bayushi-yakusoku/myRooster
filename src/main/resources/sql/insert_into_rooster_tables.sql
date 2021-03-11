@@ -1,5 +1,9 @@
 use bank_data;
 
+insert into bank_data.ref_unit (unit_name, unit_label) values ("NATION", "...");
+
+commit;
+
 insert into bank_data.unit_transco (unit_name, field_name, field_position) values ("NATION", "ID", 1);
 insert into bank_data.unit_transco (unit_name, field_name, field_position) values ("NATION", "FIRSTNAME", 2);
 insert into bank_data.unit_transco (unit_name, field_name, field_position) values ("NATION", "LASTNAME", 3);
@@ -9,7 +13,7 @@ insert into bank_data.unit_transco (unit_name, field_name, field_position) value
 
 commit;
 
-insert into bank_data.rooster_file (file_name, signature) values ('test', 'pouf');
+insert into bank_data.rooster_file (file_name, signature, unit_name) values ('test', 'pouf', 'NATION');
 
 commit;
 

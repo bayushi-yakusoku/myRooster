@@ -1,6 +1,7 @@
 package alo.spring.batch.rooster.batch.step;
 
-import alo.spring.batch.rooster.database.RoosterFile;
+import alo.spring.batch.rooster.database.entity.RoosterFile;
+import alo.spring.batch.rooster.database.dao.RoosterFileDaoImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.springframework.batch.core.Step;
@@ -34,6 +35,9 @@ public class ConfigStepGetUnitFileInfo {
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
+    @Autowired
+    private RoosterFileDaoImpl roosterFileDao;
+
     @Bean
     @StepScope
     public Tasklet taskletGetUnitFileInfo(@Value("#{jobParameters['unitFile']}") Resource unitFile,
@@ -51,7 +55,7 @@ public class ConfigStepGetUnitFileInfo {
             roosterFile.setSignature(signature);
 
             try {
-                roosterFile.updateDb(dataSource);
+                roosterFileDao.saveRoosterFile(roosterFile);
             } catch (DataAccessException e) {
                 log.error("Error during db update for file/signature : " + fileName + "/" + signature);
                 log.error(e.getMessage());

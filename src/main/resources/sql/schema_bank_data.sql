@@ -23,20 +23,33 @@ CREATE TABLE IF NOT EXISTS transaction (
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS ref_check (
+  check_name 			VARCHAR(40) NOT NULL,
+  check_label			VARCHAR(128) NOT NULL,
+
+  PRIMARY KEY (check_name)
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS ref_unit (
+  unit_name 			VARCHAR(40) NOT NULL,
+  unit_label			VARCHAR(128) NOT NULL,
+
+  PRIMARY KEY (unit_name)
+) ENGINE = InnoDB;
+
 CREATE TABLE IF NOT EXISTS unit_transco (
   unit_name 			VARCHAR(20) NOT NULL,
   field_name 			VARCHAR(40) NOT NULL,
   field_position 		INT NOT NULL,
   field_is_mandatory 	BOOLEAN DEFAULT TRUE,
 
-  PRIMARY KEY (unit_name, field_name)
-) ENGINE = InnoDB;
+  PRIMARY KEY (unit_name, field_name),
 
-CREATE TABLE IF NOT EXISTS ref_check (
-  check_name 			VARCHAR(40) NOT NULL,
-  check_label			VARCHAR(128) NOT NULL,
-
-  PRIMARY KEY (check_name)
+  CONSTRAINT fk_transco_ref_unit
+	FOREIGN KEY (unit_name)
+    REFERENCES ref_unit (unit_name)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS unit_check (
@@ -46,7 +59,13 @@ CREATE TABLE IF NOT EXISTS unit_check (
 
   PRIMARY KEY (unit_name, check_name),
 
-  CONSTRAINT fk_ref_check
+  CONSTRAINT fk_check_ref_unit
+	FOREIGN KEY (unit_name)
+    REFERENCES ref_unit (unit_name)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+
+    CONSTRAINT fk_ref_check
 	FOREIGN KEY (check_name)
 	REFERENCES ref_check (check_name)
 	ON DELETE NO ACTION
@@ -57,9 +76,16 @@ CREATE TABLE IF NOT EXISTS rooster_file (
   rooster_file_id		INT NOT NULL AUTO_INCREMENT,
   file_name				VARCHAR(256) NOT NULL,
   signature 			VARCHAR(256) NOT NULL,
+  unit_name				VARCHAR(20) NOT NULL,
 
   PRIMARY KEY (rooster_file_id),
-  UNIQUE (file_name, signature)
+  UNIQUE (file_name, signature),
+
+    CONSTRAINT fk_file_ref_unit
+	FOREIGN KEY (unit_name)
+    REFERENCES ref_unit (unit_name)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS rooster_file_info (

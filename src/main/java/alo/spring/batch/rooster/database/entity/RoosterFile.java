@@ -1,15 +1,10 @@
-package alo.spring.batch.rooster.database;
+package alo.spring.batch.rooster.database.entity;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-
-import javax.sql.DataSource;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,20 +28,6 @@ public class RoosterFile {
     public void setFileName(String fileName) {
         this.fileName = fileName;
         this.unit = getUnitFromFileName();
-    }
-
-    public void updateDb(DataSource dataSource) throws DataAccessException {
-        Assert.notNull(fileName, "filename cannot be null pomalo!");
-        Assert.notNull(signature, "signature cannot be null pomalo!");
-
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-
-        jdbcTemplate.update(
-                    "INSERT INTO BANK_DATA.ROOSTER_FILE (FILE_NAME, SIGNATURE) " +
-                            "VALUES (?, ?);",
-                    fileName,
-                    signature
-            );
     }
 
     @Nullable

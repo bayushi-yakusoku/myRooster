@@ -1,6 +1,6 @@
 package alo.spring.batch.rooster.batch.step;
 
-import alo.spring.batch.rooster.database.RoosterFile;
+import alo.spring.batch.rooster.database.entity.RoosterFile;
 import alo.spring.batch.rooster.database.UnitTransco;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
