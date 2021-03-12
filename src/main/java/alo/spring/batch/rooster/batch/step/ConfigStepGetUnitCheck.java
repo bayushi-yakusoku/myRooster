@@ -1,7 +1,8 @@
 package alo.spring.batch.rooster.batch.step;
 
+import alo.spring.batch.rooster.database.dao.UnitCheckDaoImpl;
 import alo.spring.batch.rooster.database.entity.RoosterFile;
-import alo.spring.batch.rooster.database.UnitCheck;
+import alo.spring.batch.rooster.database.entity.unitcheck.UnitCheck;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Step;
@@ -30,10 +31,13 @@ public class ConfigStepGetUnitCheck {
 
     RoosterFile roosterFile;
 
+    @Autowired
+    UnitCheckDaoImpl unitCheckDao;
+
     @Bean
     public Tasklet taskletGetUnitCheck(@Qualifier("bankDataSource") DataSource dataSource) {
         return (contribution, chunkContext) -> {
-            UnitCheck unitCheck = new UnitCheck(roosterFile.getUnit(), dataSource);
+            UnitCheck unitCheck = unitCheckDao.getUnitCheck(roosterFile.getUnit());
 
             chunkContext.getStepContext().getStepExecution().getExecutionContext().put(UNIT_CHECK_KEY, unitCheck);
 

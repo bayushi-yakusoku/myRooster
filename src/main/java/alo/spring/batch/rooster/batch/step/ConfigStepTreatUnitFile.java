@@ -2,9 +2,9 @@ package alo.spring.batch.rooster.batch.step;
 
 import alo.spring.batch.rooster.control.Checker;
 import alo.spring.batch.rooster.control.ClassifierUnitItem;
-import alo.spring.batch.rooster.database.UnitCheck;
+import alo.spring.batch.rooster.database.entity.unitcheck.UnitCheck;
 import alo.spring.batch.rooster.database.entity.RoosterFile;
-import alo.spring.batch.rooster.database.entity.UnitTransco;
+import alo.spring.batch.rooster.database.entity.transco.UnitTransco;
 import alo.spring.batch.rooster.model.unit.UnitItem;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;

@@ -2,7 +2,7 @@ package alo.spring.batch.rooster.batch.step;
 
 import alo.spring.batch.rooster.database.dao.UnitTranscoDaoImpl;
 import alo.spring.batch.rooster.database.entity.RoosterFile;
-import alo.spring.batch.rooster.database.entity.UnitTransco;
+import alo.spring.batch.rooster.database.entity.transco.UnitTransco;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;

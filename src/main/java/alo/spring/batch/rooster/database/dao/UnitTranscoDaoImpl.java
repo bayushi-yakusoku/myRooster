@@ -1,7 +1,7 @@
 package alo.spring.batch.rooster.database.dao;
 
-import alo.spring.batch.rooster.database.entity.FieldInfo;
-import alo.spring.batch.rooster.database.entity.UnitTransco;
+import alo.spring.batch.rooster.database.entity.transco.FieldInfo;
+import alo.spring.batch.rooster.database.entity.transco.UnitTransco;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

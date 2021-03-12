@@ -1,7 +1,7 @@
 package alo.spring.batch.rooster.control;
 
-import alo.spring.batch.rooster.database.Check;
-import alo.spring.batch.rooster.database.UnitCheck;
+import alo.spring.batch.rooster.database.entity.unitcheck.Check;
+import alo.spring.batch.rooster.database.entity.unitcheck.UnitCheck;
 import alo.spring.batch.rooster.model.unit.UnitItem;
 import lombok.extern.slf4j.Slf4j;
 

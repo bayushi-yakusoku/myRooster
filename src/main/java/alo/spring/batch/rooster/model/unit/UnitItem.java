@@ -1,6 +1,6 @@
 package alo.spring.batch.rooster.model.unit;
 
-import alo.spring.batch.rooster.database.entity.UnitTransco;
+import alo.spring.batch.rooster.database.entity.transco.UnitTransco;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package alo.spring.batch.rooster.database;
+package alo.spring.batch.rooster.database.entity.unitcheck;
 
 import lombok.Data;
 
