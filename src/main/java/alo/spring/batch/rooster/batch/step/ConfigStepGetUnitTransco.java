@@ -1,7 +1,8 @@
 package alo.spring.batch.rooster.batch.step;
 
+import alo.spring.batch.rooster.database.dao.UnitTranscoDaoImpl;
 import alo.spring.batch.rooster.database.entity.RoosterFile;
-import alo.spring.batch.rooster.database.UnitTransco;
+import alo.spring.batch.rooster.database.entity.UnitTransco;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -27,12 +28,13 @@ public class ConfigStepGetUnitTransco {
 
     private RoosterFile roosterFile;
 
-    private UnitTransco unitTransco;
+    @Autowired
+    private UnitTranscoDaoImpl transcoDao;
 
     @Bean
     public Tasklet taskletGetUnitTransco(@Qualifier("bankDataSource") DataSource dataSource) {
         return (contribution, chunkContext) -> {
-            unitTransco = new UnitTransco(roosterFile.getUnit(), dataSource);
+            UnitTransco unitTransco = transcoDao.getTransco(roosterFile.getUnit());
 
             ExecutionContext context = chunkContext.getStepContext().getStepExecution().getExecutionContext();
             context.put(ConfigStepGetUnitFileInfo.UNIT_FILE_KEY, roosterFile);

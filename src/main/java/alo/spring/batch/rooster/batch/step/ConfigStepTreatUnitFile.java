@@ -2,10 +2,11 @@ package alo.spring.batch.rooster.batch.step;
 
 import alo.spring.batch.rooster.control.Checker;
 import alo.spring.batch.rooster.control.ClassifierUnitItem;
-import alo.spring.batch.rooster.database.entity.RoosterFile;
 import alo.spring.batch.rooster.database.UnitCheck;
-import alo.spring.batch.rooster.database.UnitTransco;
+import alo.spring.batch.rooster.database.entity.RoosterFile;
+import alo.spring.batch.rooster.database.entity.UnitTransco;
 import alo.spring.batch.rooster.model.unit.UnitItem;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -26,7 +27,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.util.Assert;
 
 @Slf4j
 @Configuration
@@ -46,9 +46,7 @@ public class ConfigStepTreatUnitFile {
 
     @Bean
     @StepScope
-    public FlatFileItemReader<UnitItem> readerUnitItems(@Value("#{jobParameters['unitFile']}") Resource unitFile) {
-        Assert.notNull(unitFile, "unitFile cannot be null, check jobs parameters!");
-
+    public FlatFileItemReader<UnitItem> readerUnitItems(@NonNull @Value("#{jobParameters['unitFile']}") Resource unitFile) {
         return new FlatFileItemReaderBuilder<UnitItem>()
                 .name("ReaderUnitItem")
                 .resource(unitFile)
@@ -61,7 +59,7 @@ public class ConfigStepTreatUnitFile {
 
     @Bean
     @StepScope
-    public FlatFileItemWriter<UnitItem> writerUnitItems(@Value("#{jobParameters['outputFile']}") Resource outputFile) {
+    public FlatFileItemWriter<UnitItem> writerUnitItems(@NonNull @Value("#{jobParameters['outputFile']}") Resource outputFile) {
         return new FlatFileItemWriterBuilder<UnitItem>()
                 .name("WriterUnitItem")
                 .resource(outputFile)
@@ -71,7 +69,7 @@ public class ConfigStepTreatUnitFile {
 
     @Bean
     @StepScope
-    public FlatFileItemWriter<UnitItem> goodWriterUnitItems(@Value("#{jobParameters['goodOutputFile']}") Resource outputFile) {
+    public FlatFileItemWriter<UnitItem> goodWriterUnitItems(@NonNull @Value("#{jobParameters['goodOutputFile']}") Resource outputFile) {
         return new FlatFileItemWriterBuilder<UnitItem>()
                 .name("WriterUnitItem -> Good")
                 .resource(outputFile)
@@ -81,7 +79,7 @@ public class ConfigStepTreatUnitFile {
 
     @Bean
     @StepScope
-    public FlatFileItemWriter<UnitItem> badWriterUnitItems(@Value("#{jobParameters['badOutputFile']}") Resource outputFile) {
+    public FlatFileItemWriter<UnitItem> badWriterUnitItems(@NonNull @Value("#{jobParameters['badOutputFile']}") Resource outputFile) {
         return new FlatFileItemWriterBuilder<UnitItem>()
                 .name("WriterUnitItem -> Bad")
                 .resource(outputFile)
