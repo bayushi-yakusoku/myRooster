@@ -31,8 +31,8 @@ public class ConfigDatabase {
     }
 
     @Bean
-    public DataSourceInitializer dataSourceInitializer1(@Qualifier("bankDataSource") DataSource datasource,
-                                                        @Value("${bank.datasource.schema.init:false}") Boolean initSchema) {
+    public DataSourceInitializer bankDataSourceInitializer(@Qualifier("bankDataSource") DataSource datasource,
+                                                           @Value("${bank.datasource.schema.init:false}") Boolean initSchema) {
         ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
 
 //        resourceDatabasePopulator.addScript(new ClassPathResource("schema_bank_data.sql"));
@@ -51,6 +51,33 @@ public class ConfigDatabase {
                 log.info("Schema initialisation : " + datasource.getConnection().getMetaData().getURL());
             } catch (SQLException e) {
                 log.warn("Error, cannot establish connection with bankDataSource at this point...");
+
+                return dataSourceInitializer;
+            }
+        }
+
+        return dataSourceInitializer;
+    }
+
+    @Bean
+    public DataSourceInitializer springDataSourceInitializer(@Qualifier("springDataSource") DataSource datasource,
+                                                           @Value("${spring.datasource.schema.init:false}") Boolean initSchema) {
+        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+
+//        resourceDatabasePopulator.addScript(new ClassPathResource("schema_spring_batch.sql"));
+        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/sql/schema_spring_batch.sql"));
+
+        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+        dataSourceInitializer.setDataSource(datasource);
+        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
+
+        dataSourceInitializer.setEnabled(initSchema);
+
+        if (initSchema) {
+            try {
+                log.info("Schema initialisation : " + datasource.getConnection().getMetaData().getURL());
+            } catch (SQLException e) {
+                log.warn("Error, cannot establish connection with springDataSource at this point...");
 
                 return dataSourceInitializer;
             }

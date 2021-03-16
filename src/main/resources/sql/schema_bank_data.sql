@@ -113,11 +113,5 @@ CREATE TABLE IF NOT EXISTS rooster_file_job (
 	FOREIGN KEY (rooster_file_id)
     REFERENCES rooster_file (rooster_file_id)
     ON DELETE no action
-    ON UPDATE no action,
-
-  CONSTRAINT fk_file_job_batch_job_instance
-	FOREIGN KEY (job_instance_id)
-    REFERENCES spring_batch.batch_job_instance (job_instance_id)
-    ON DELETE no action
     ON UPDATE no action
 ) ENGINE = InnoDB;
