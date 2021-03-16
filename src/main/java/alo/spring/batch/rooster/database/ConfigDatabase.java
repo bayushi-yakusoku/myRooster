@@ -50,7 +50,7 @@ public class ConfigDatabase {
             try {
                 log.info("Schema initialisation : " + datasource.getConnection().getMetaData().getURL());
             } catch (SQLException e) {
-                log.error("Error, cannot establish connection at this point...");
+                log.warn("Error, cannot establish connection with bankDataSource at this point...");
 
                 return dataSourceInitializer;
             }
