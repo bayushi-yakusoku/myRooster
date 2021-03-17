@@ -1,4 +1,4 @@
-package alo.spring.batch.rooster.database.entity;
+package alo.spring.batch.rooster.database.entity.roosterfile;
 
 import lombok.AccessLevel;
 import lombok.Data;

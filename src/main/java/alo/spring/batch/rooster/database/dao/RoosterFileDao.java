@@ -1,6 +1,6 @@
 package alo.spring.batch.rooster.database.dao;
 
-import alo.spring.batch.rooster.database.entity.RoosterFile;
+import alo.spring.batch.rooster.database.entity.roosterfile.RoosterFile;
 
 public interface RoosterFileDao {
 
