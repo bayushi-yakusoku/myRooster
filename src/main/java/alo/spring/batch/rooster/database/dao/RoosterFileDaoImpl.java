@@ -1,6 +1,6 @@
 package alo.spring.batch.rooster.database.dao;
 
-import alo.spring.batch.rooster.database.entity.RoosterFile;
+import alo.spring.batch.rooster.database.entity.roosterfile.RoosterFile;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
