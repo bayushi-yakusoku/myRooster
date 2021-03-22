@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS rooster_file (
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS rooster_file_info (
-  rooster_file_id		INT NOT NULL AUTO_INCREMENT,
+  rooster_file_id		INT NOT NULL,
   info_name				VARCHAR(256) NOT NULL,
   info_value			VARCHAR(256) NOT NULL,
 
@@ -98,12 +98,12 @@ CREATE TABLE IF NOT EXISTS rooster_file_info (
   CONSTRAINT fk_file_info_rooster_file
 	FOREIGN KEY (rooster_file_id)
     REFERENCES rooster_file (rooster_file_id)
-    ON DELETE no action
-    ON UPDATE no action
+    ON DELETE cascade
+    ON UPDATE cascade
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS rooster_file_job (
-  rooster_file_id		INT NOT NULL AUTO_INCREMENT,
+  rooster_file_id		INT NOT NULL,
   job_instance_id		BIGINT  NOT NULL,
   creation_date			DATETIME NOT NULL DEFAULT now(),
 
@@ -112,6 +112,6 @@ CREATE TABLE IF NOT EXISTS rooster_file_job (
   CONSTRAINT fk_file_job_rooster_file
 	FOREIGN KEY (rooster_file_id)
     REFERENCES rooster_file (rooster_file_id)
-    ON DELETE no action
-    ON UPDATE no action
+    ON DELETE cascade
+    ON UPDATE cascade
 ) ENGINE = InnoDB;
