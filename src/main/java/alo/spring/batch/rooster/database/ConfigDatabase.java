@@ -32,13 +32,18 @@ public class ConfigDatabase {
 
     @Bean
     public DataSourceInitializer bankDataSourceInitializer(@Qualifier("bankDataSource") DataSource datasource,
-                                                           @Value("${bank.datasource.schema.init:false}") Boolean initSchema) {
+                                                           @Value("${bank.datasource.schema.init:false}") Boolean initSchema,
+                                                           @Value("${bank.datasource.schema.scripts}") String[] initScripts) {
         ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
 
 //        resourceDatabasePopulator.addScript(new ClassPathResource("schema_bank_data.sql"));
 //        resourceDatabasePopulator.addScript(new ClassPathResource("insert_into_rooster_tables.sql"));
-        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/sql/schema_bank_data.sql"));
-        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/sql/insert_into_rooster_tables.sql"));
+//        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/sql/schema_bank_data.sql"));
+//        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/sql/insert_into_rooster_tables.sql"));
+
+        for (String script : initScripts) {
+            resourceDatabasePopulator.addScript(new PathResource(script));
+        }
 
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
         dataSourceInitializer.setDataSource(datasource);
