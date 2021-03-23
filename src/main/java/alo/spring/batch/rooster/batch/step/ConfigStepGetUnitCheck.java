@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import javax.sql.DataSource;
 
 @Slf4j
@@ -31,12 +30,11 @@ public class ConfigStepGetUnitCheck {
 
     RoosterFile roosterFile;
 
-    @Autowired
-    UnitCheckDaoImpl unitCheckDao;
-
     @Bean
     public Tasklet taskletGetUnitCheck(@Qualifier("bankDataSource") DataSource dataSource) {
         return (contribution, chunkContext) -> {
+            UnitCheckDaoImpl unitCheckDao = new UnitCheckDaoImpl(dataSource);
+
             UnitCheck unitCheck = unitCheckDao.getUnitCheck(roosterFile.getUnit());
 
             chunkContext.getStepContext().getStepExecution().getExecutionContext().put(UNIT_CHECK_KEY, unitCheck);

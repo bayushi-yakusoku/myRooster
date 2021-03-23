@@ -5,11 +5,14 @@ import alo.spring.batch.rooster.database.entity.transco.UnitTransco;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import javax.sql.DataSource;
 
 @Slf4j
-@Component
 public class UnitTranscoDaoImpl extends AbstractDaoImpl implements UnitTranscoDao {
+
+    public UnitTranscoDaoImpl(DataSource dataSource) {
+        super(dataSource);
+    }
 
     @Override
     public UnitTransco getTransco(String unit) throws DataAccessException {

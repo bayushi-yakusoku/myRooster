@@ -4,11 +4,14 @@ import alo.spring.batch.rooster.database.entity.unitcheck.Check;
 import alo.spring.batch.rooster.database.entity.unitcheck.UnitCheck;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import javax.sql.DataSource;
 
 @Slf4j
-@Component
 public class UnitCheckDaoImpl extends AbstractDaoImpl implements UnitCheckDao {
+
+    public UnitCheckDaoImpl(DataSource dataSource) {
+        super(dataSource);
+    }
 
     @Override
     public UnitCheck getUnitCheck(String unit) {

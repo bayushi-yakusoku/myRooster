@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import javax.sql.DataSource;
 
 @Slf4j
@@ -28,12 +27,11 @@ public class ConfigStepGetUnitTransco {
 
     private RoosterFile roosterFile;
 
-    @Autowired
-    private UnitTranscoDaoImpl transcoDao;
-
     @Bean
     public Tasklet taskletGetUnitTransco(@Qualifier("bankDataSource") DataSource dataSource) {
         return (contribution, chunkContext) -> {
+            UnitTranscoDaoImpl transcoDao = new UnitTranscoDaoImpl(dataSource);
+
             UnitTransco unitTransco = transcoDao.getTransco(roosterFile.getUnit());
 
             ExecutionContext context = chunkContext.getStepContext().getStepExecution().getExecutionContext();

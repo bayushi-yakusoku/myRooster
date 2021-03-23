@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
-
 import javax.sql.DataSource;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -35,9 +34,6 @@ public class ConfigStepGetUnitFileInfo {
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
-    @Autowired
-    private RoosterFileDaoImpl roosterFileDao;
-
     @Bean
     @StepScope
     public Tasklet taskletGetUnitFileInfo(@Value("#{jobParameters['unitFile']}") Resource unitFile,
@@ -53,6 +49,9 @@ public class ConfigStepGetUnitFileInfo {
 
             roosterFile.setFileName(fileName);
             roosterFile.setSignature(signature);
+            roosterFile.setUnit(roosterFile.getUnitFromFileName());
+
+            RoosterFileDaoImpl roosterFileDao = new RoosterFileDaoImpl(dataSource);
 
             try {
                 roosterFileDao.saveRoosterFile(roosterFile);
