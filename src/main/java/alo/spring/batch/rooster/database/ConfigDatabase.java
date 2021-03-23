@@ -37,9 +37,9 @@ public class ConfigDatabase {
         ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
 
 //        resourceDatabasePopulator.addScript(new ClassPathResource("schema_bank_data.sql"));
-//        resourceDatabasePopulator.addScript(new ClassPathResource("insert_into_rooster_tables.sql"));
+//        resourceDatabasePopulator.addScript(new ClassPathResource("configure_rooster_tables.sql"));
 //        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/sql/schema_bank_data.sql"));
-//        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/sql/insert_into_rooster_tables.sql"));
+//        resourceDatabasePopulator.addScript(new PathResource("src/main/resources/sql/configure_rooster_tables.sql"));
 
         for (String script : initScripts) {
             resourceDatabasePopulator.addScript(new PathResource(script));
