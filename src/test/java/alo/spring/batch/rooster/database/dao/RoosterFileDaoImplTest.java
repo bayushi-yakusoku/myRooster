@@ -1,14 +1,13 @@
 package alo.spring.batch.rooster.database.dao;
 
+import alo.spring.batch.rooster.database.entity.roosterfile.RoosterFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.PathResource;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-
 import javax.sql.DataSource;
 
 //@ExtendWith(SpringExtension.class)
@@ -23,8 +22,8 @@ import javax.sql.DataSource;
 @SpringBootTest()
 class RoosterFileDaoImplTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+//    @Autowired
+//    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     @Qualifier("bankDataSource")
@@ -32,11 +31,12 @@ class RoosterFileDaoImplTest {
 
     @BeforeEach
     void setUp() {
-//        Resource resource = new ClassPathResource("CreateDefaultDB.sql");
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
 
-        databasePopulator.addScript(new PathResource("src/test/resources/sql/schema_bank_data-test.sql"));
-        databasePopulator.addScript(new PathResource("src/test/resources/sql/insert_into_rooster_tables-test.sql"));
+        databasePopulator.addScript(new PathResource("src/main/resources/sql/schema_bank_data.sql"));
+        databasePopulator.addScript(new PathResource("src/test/resources/sql/configure_rooster_tables-test.sql"));
+//        databasePopulator.addScript(new PathResource("src/test/resources/sql/insert_samples_into_rooster_tables-test.sql"));
+
         databasePopulator.execute(dataSource);
     }
 
@@ -50,6 +50,14 @@ class RoosterFileDaoImplTest {
 
     @Test
     void whenInjectInMemoryDataSource_thenReturnCorrectEmployeeCount() {
-        System.out.println("pouf!");
+        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
+        databasePopulator.addScript(new PathResource("src/test/resources/sql/insert_samples_into_rooster_tables-test.sql"));
+        databasePopulator.execute(dataSource);
+
+        RoosterFileDaoImpl roosterFileDao = new RoosterFileDaoImpl(dataSource);
+
+        RoosterFile roosterFile = roosterFileDao.getRoosterFile("test1", "pouf");
+
+        System.out.println("roosterFile: " + roosterFile);
     }
 }
