@@ -54,8 +54,6 @@ public class RoosterFileDaoImpl extends AbstractDaoImpl implements RoosterFileDa
         Assert.notNull(roosterFile.getFileName(), "filename cannot be null pomalo!");
         Assert.notNull(roosterFile.getSignature(), "signature cannot be null pomalo!");
 
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(getDataSource());
-
         RoosterFile existingRoosterFile = getRoosterFile(roosterFile.getFileName(), roosterFile.getSignature());
 
         if (existingRoosterFile != null) {
